@@ -1,10 +1,18 @@
 <!DOCTYPE HTML>
 <html>
 <head>
-<title>Profilo di {{user_nick}}</title>
+<title>{{user_title}}</title>
 </head>
 <body>
-Nick: {{user_nick}}<br />
-ID: {{user_id}}
+{% if not id.isdigit() %}
+    L'id deve essere numerico!
+{% elif user_dict %}
+    ID: {{user_id}} <br />
+    Nick: {{user_nick}} <br />
+    Email: {{user_email}} <br />
+    {{user_admin_str}}
+{% else %}
+    Nessun utente trovato!
+{% endif %}
 </body>
 </html>

@@ -4,10 +4,16 @@
 <title>{{topic_title}}</title>
 </head>
 <body>
-ID: {{topic_id}} <br />
-Autore: {{topic_author}} <br />
-Descrizione: {{topic_desc}} <br />
-Contenuto: <br />
-{{topic_content}}
+{% if not id.isdigit() %}
+    L'id deve essere numerico!
+{% elif topic_dict %}
+    ID: {{topic_id}} <br />
+    Autore: {{topic_author_nick}} <br />
+    Descrizione: {{topic_desc}} <br />
+    Contenuto: <br />
+    {{topic_content}}
+{% else %}
+    Nessun utente trovato!
+{% endif %}
 </body>
 </html>
