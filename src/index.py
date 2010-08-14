@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, Markup
 from pymongo import *
 
 app = Flask(__name__)
@@ -36,6 +36,8 @@ def user(id):
     user_title = "Errore"
     try:
         user_nick = user_dict['nick']
+        user_avatar_url = user_dict['avatar']
+        user_avatar = Markup('<img src="{avatar}" />'.format(avatar=user_avatar_url))
         user_title = "Profilo di {nick}".format(nick=user_nick)
         user_id = id
         user_email = user_dict['email']
