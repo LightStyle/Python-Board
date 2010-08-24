@@ -20,10 +20,13 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 #
 
-from flask import Flask, render_template, Markup
+import re
+
+from flask import *
 from pymongo import *
 
 app = Flask(__name__)
+run_port = 80
 
 db = Connection().ff
 
@@ -72,6 +75,37 @@ def user(id):
         pass
     return render_template('user.html', **locals())
 
+@app.route("/test/recv/", methods = ['POST'])
+def recv():
+    try:
+        args = request.form
+        login = args['login']
+        password = args['password']
+        logged = 'False'
+        if check_email(login):
+            tosearch = 'email'
+        elif login.isdigit():
+            tosearch = 'id'
+        else:
+            tosearch = 'nick'
+        login_dict = db.users.find_one({tosearch: login})
+        if login_dict:
+            db_pw = login_dict['password']
+            if password == db_pw:
+                logged = 'True'
+        return 'Login: {0}<br />\nPassword: {1}<br />\nLogged: {2}'.format(login,
+                                                                           password,
+                                                                           logged)
+    except:
+        pass
+
+@app.route("/test/send/")
+def send():
+    return render_template('send.html')
+
+def check_email(string):
+    return bool(re.match('([A-Za-z0-9]*)@([A-Za-z0-9]*).([a-z]*)', string))
+
 if __name__ == '__main__':
     app.debug = True
-    app.run()
+    app.run(host='127.0.0.1', port=run_port)
